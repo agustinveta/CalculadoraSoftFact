@@ -147,7 +147,8 @@
 
 <header>
   <div class="logo-wrap">
-    <img src="logo.png" alt="Veta">
+    <img src="icon.png" alt="Veta" style="height:36px;">
+    <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:18px;letter-spacing:-0.5px;">veta<span style='color:var(--blue);'>.</span></span>
   </div>
   <div class="badge">Calculadora ROI · Soft Factory</div>
 </header>
@@ -179,16 +180,16 @@
     <div class="section-label">Fee de agencia</div>
 
     <div class="field">
-      <label>Set up (pago único)</label>
-      <div class="field-row"><span class="fp">ARS</span><input type="number" id="feeSetup" value="0" min="0" step="100000"></div>
-    </div>
-    <div class="field">
       <label>Fee mensual (gestión + mantenimiento)</label>
       <div class="field-row"><span class="fp">ARS / mes</span><input type="number" id="feeAgencia" value="1800000" min="0" step="50000"></div>
     </div>
 
     <div class="section-label">Negocio del cliente</div>
 
+    <div class="field">
+      <label>Set up inicial del cliente (pago único, si aplica)</label>
+      <div class="field-row"><span class="fp">ARS</span><input type="number" id="feeSetup" value="0" min="0" step="100000"></div>
+    </div>
     <div class="field">
       <label>Ingreso mensual por cliente activo</label>
       <div class="field-row"><span class="fp">ARS $ / mes</span><input type="number" id="monthlyRevenue" value="80000" min="0" step="5000"></div>
@@ -247,7 +248,7 @@
       <div class="win-hero-eyebrow">Resultado proyectado</div>
       <div class="win-hero-label">Ganancia neta acumulada a 12 meses</div>
       <div class="win-hero-value" id="heroGanancia">…</div>
-      <div class="win-hero-sub">ingresos totales − inversión total (fee + pauta + setup)</div>
+      <div class="win-hero-sub">ingresos totales − inversión total (fee + pauta + setup del cliente)</div>
       <div class="payback-row">
         <div class="pill" id="paybackPill">…</div>
         <div class="roi-badge" id="roiBadge">…</div>
@@ -475,7 +476,8 @@
     }
 
     const labels = [], gains = [], costs = [];
-    let cumGain = 0, cumCost = feeSetup; // setup es costo mes 0
+    let cumGain = feeSetup; // setup del cliente suma al ingreso mes 1
+    let cumCost = 0;
     let paybackMonth = null, clientes6 = 0, margen6 = 0;
 
     for (let m = 1; m <= MONTHS; m++) {
@@ -543,7 +545,7 @@
     document.getElementById('insightText').innerHTML =
       `Arrancamos pesimista: mes 1 con <strong>${newM1.toFixed(2)} clientes</strong> (50% cap, CPA $70, cierre 20%), mes 2 con <strong>${newM2.toFixed(2)}</strong>, y desde el mes 3 en régimen con <strong>${newMN.toFixed(2)} clientes/mes</strong> (CPA $${cpaRegimen}, cierre 25%). ` +
       `Con ${duration} meses de vida útil por cliente, al mes 6 hay <strong>${clientes6.toFixed(1)} clientes activos</strong> generando <strong>$${fmt(margen6)}/mes de margen</strong>. ` +
-      (feeSetup > 0 ? `El set up de <strong>$${fmt(feeSetup)}</strong> se suma como inversión inicial. ` : '') +
+      (feeSetup > 0 ? `El cliente paga un set up inicial de <strong>$${fmt(feeSetup)}</strong> que se suma al ingreso del mes 1. ` : '') +
       (paybackMonth
         ? `La inversión total se recupera en el <strong>mes ${paybackMonth}</strong> y la <strong>ganancia neta a 12 meses es $${fmt(Math.abs(ganancia12))}</strong>.`
         : `Con los datos actuales el recupero supera los 12 meses.`);
