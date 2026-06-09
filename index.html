@@ -4,127 +4,152 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora ROI · Veta</title>
+<link rel="icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0A0A0F; --surface: #13131A; --surface2: #1C1C27; --border: #2A2A3A;
-    --accent: #7B61FF; --glow: rgba(123,97,255,0.15); --accent2: #00E5A0;
-    --text: #F0EFF8; --muted: #7A798A; --danger: #FF5E5E; --warning: #FFB547;
+    --blue: #1E9BF0; --blue-glow: rgba(30,155,240,0.15); --blue-dim: rgba(30,155,240,0.08);
+    --accent2: #00E5A0; --text: #F0EFF8; --muted: #7A798A; --danger: #FF5E5E; --warning: #FFB547;
   }
-  body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
 
-  header { padding: 26px 44px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .logo { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 20px; }
-  .logo span { color: var(--accent); }
+  /* HEADER */
+  header {
+    padding: 18px 44px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,10,15,0.95); position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 12px; }
+  .logo-wrap img { height: 32px; filter: brightness(1.1); }
   .badge { font-size: 10px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 4px 12px; border-radius: 20px; }
 
-  main { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 73px); }
+  main { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 69px); }
 
-  .inputs-panel { padding: 32px 36px; border-right: 1px solid var(--border); overflow-y: auto; }
-  .panel-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
-  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
+  /* INPUTS */
+  .inputs-panel { padding: 28px 32px; border-right: 1px solid var(--border); overflow-y: auto; }
+  .panel-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
   .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 400; }
   .field-row { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; transition: border-color .2s; }
-  .field-row:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
+  .field-row:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
   .fp { padding: 10px 12px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); background: var(--surface2); border-right: 1px solid var(--border); white-space: nowrap; }
+  .fp-right { border-right: none; border-left: 1px solid var(--border); }
   .field-row input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; padding: 10px 13px; }
-  .slider-wrap { margin-top: 6px; }
+  .slider-wrap { margin-top: 5px; }
   input[type=range] { width: 100%; -webkit-appearance: none; height: 3px; background: var(--border); border-radius: 2px; outline: none; cursor: pointer; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--blue); cursor: pointer; box-shadow: 0 0 6px var(--blue-glow); }
   .slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-top: 3px; }
 
-  /* Phase badge */
-  .phase-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 4px; }
-  .phase-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-  .phase-card .ph-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .phase-card .ph-val { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; }
+  /* Phase cards */
+  .phase-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .phase-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; }
+  .ph-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; font-weight: 600; }
+  .ph-val { font-size: 11px; font-weight: 700; }
+  .ph-sub { font-size: 9px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
   .phase-card.warn .ph-val { color: var(--warning); }
-  .phase-card.mid .ph-val { color: #A78BFA; }
-  .phase-card.ok .ph-val { color: var(--accent2); }
-  .phase-card .ph-sub { font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .phase-card.mid .ph-val  { color: #A78BFA; }
+  .phase-card.ok .ph-val   { color: var(--accent2); }
 
-  .fixed-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 12px 14px; }
-  .fixed-block-title { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
-  .fixed-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); align-items: center; }
+  .fixed-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 11px 13px; }
+  .fixed-block-title { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 7px; font-weight: 700; }
+  .fixed-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); }
   .fixed-row:last-child { border-bottom: none; }
   .fixed-row span:first-child { font-size: 11px; color: var(--muted); }
-  .fixed-row .fr-val { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text); font-weight: 700; }
+  .fr-val { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text); font-weight: 700; }
   .phase-tag { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
   .phase-tag.warn { background: rgba(255,181,71,.15); color: var(--warning); }
-  .phase-tag.mid  { background: rgba(167,139,250,.15); color: #A78BFA; }
   .phase-tag.ok   { background: rgba(0,229,160,.12); color: var(--accent2); }
 
   /* RESULTS */
-  .results-panel { padding: 32px 36px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .results-panel { padding: 28px 32px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
 
+  /* WIN HERO — lo más importante */
+  .win-hero {
+    background: linear-gradient(135deg, #0D1F0D 0%, #0A1A2E 100%);
+    border: 1px solid rgba(0,229,160,0.25); border-radius: 16px;
+    padding: 28px 32px; position: relative; overflow: hidden;
+  }
+  .win-hero::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(0,229,160,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .win-hero-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); opacity: .7; margin-bottom: 4px; }
+  .win-hero-label { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+  .win-hero-value { font-family: 'Space Mono', monospace; font-size: 56px; font-weight: 700; line-height: 1; color: var(--accent2); transition: all .3s; }
+  .win-hero-value.neg { color: var(--danger); }
+  .win-hero-value.warn { color: var(--warning); }
+  .win-hero-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .win-hero-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 16px; }
+  .win-mini { text-align: center; }
+  .win-mini:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.07); }
+  .win-mini-val { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; color: var(--text); }
+  .win-mini-label { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  /* Payback pill */
+  .payback-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+  .pill { display: inline-block; border-radius: 24px; padding: 6px 14px; font-size: 12px; font-weight: 600; background: rgba(0,229,160,.1); border: 1px solid rgba(0,229,160,.3); color: var(--accent2); }
+  .pill.warn { background: rgba(255,181,71,.1); border-color: rgba(255,181,71,.3); color: var(--warning); }
+  .pill.danger { background: rgba(255,94,94,.1); border-color: rgba(255,94,94,.3); color: var(--danger); }
+  .roi-badge { display: inline-block; border-radius: 24px; padding: 6px 14px; font-size: 12px; font-weight: 700; background: rgba(30,155,240,.1); border: 1px solid rgba(30,155,240,.3); color: var(--blue); font-family: 'Space Mono', monospace; }
+
+  /* Funnel */
   .funnel-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-  .fs { background: var(--surface2); padding: 13px 10px; text-align: center; }
-  .fs .fv { font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; }
+  .fs { background: var(--surface2); padding: 12px 8px; text-align: center; }
+  .fs .fv { font-family: 'Space Mono', monospace; font-size: 17px; font-weight: 700; }
   .fs .fl { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .fs .fsub { font-size: 9px; color: var(--muted); margin-top: 1px; opacity: .6; }
-  .fs:nth-child(1) .fv { color: var(--accent); }
+  .fs .fsub { font-size: 9px; color: var(--muted); opacity: .6; margin-top: 1px; }
+  .fs:nth-child(1) .fv { color: var(--blue); }
   .fs:nth-child(2) .fv { color: #A78BFA; }
   .fs:nth-child(3) .fv { color: #60A5FA; }
   .fs:nth-child(4) .fv { color: var(--accent2); }
 
-  .roi-hero { background: linear-gradient(135deg, var(--surface), #1A1A2E); border: 1px solid var(--border); border-radius: 13px; padding: 24px 28px; text-align: center; position: relative; overflow: hidden; }
-  .roi-hero::before { content: ''; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 180px; height: 180px; background: radial-gradient(circle, rgba(123,97,255,.1) 0%, transparent 70%); pointer-events: none; }
-  .roi-eyebrow { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-  .roi-value { font-family: 'Space Mono', monospace; font-size: 60px; font-weight: 700; line-height: 1; margin-bottom: 3px; transition: color .3s; }
-  .roi-value.pos { color: var(--accent2); }
-  .roi-value.neg { color: var(--danger); }
-  .roi-value.warn { color: var(--warning); }
-  .roi-unit { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
-  .pill { display: inline-block; border-radius: 24px; padding: 6px 16px; font-size: 12px; font-weight: 600; background: rgba(0,229,160,.08); border: 1px solid rgba(0,229,160,.3); color: var(--accent2); }
-  .pill.warn { background: rgba(255,181,71,.08); border-color: rgba(255,181,71,.3); color: var(--warning); }
-  .pill.danger { background: rgba(255,94,94,.08); border-color: rgba(255,94,94,.3); color: var(--danger); }
-
-  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .mc { background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 14px 16px; }
-  .mc .ml { font-size: 10px; color: var(--muted); margin-bottom: 5px; }
-  .mc .mv { font-family: 'Space Mono', monospace; font-size: 17px; font-weight: 700; }
-  .mc .ms { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
+  /* Chart */
   .chart-section { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 18px 20px; }
-  .chart-title { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .chart-subtitle { font-size: 10px; color: var(--muted); margin-bottom: 12px; opacity: .7; }
-  canvas { width: 100% !important; height: 190px !important; }
+  .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .chart-title { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .chart-sub { font-size: 10px; color: var(--muted); opacity: .6; margin-top: 2px; }
+  canvas { width: 100% !important; height: 180px !important; }
 
-  /* Breakeven badge below chart */
-  .be-badge { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 14px; border-radius: 8px; }
+  .be-badge { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 14px; border-radius: 8px; }
   .be-badge.found { background: rgba(0,229,160,.07); border: 1px solid rgba(0,229,160,.2); }
   .be-badge.notfound { background: rgba(255,94,94,.07); border: 1px solid rgba(255,94,94,.2); }
-  .be-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .be-badge.found .be-dot { background: var(--accent2); box-shadow: 0 0 8px rgba(0,229,160,.5); }
+  .be-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .be-badge.found .be-dot { background: var(--accent2); box-shadow: 0 0 6px rgba(0,229,160,.5); }
   .be-badge.notfound .be-dot { background: var(--danger); }
-  .be-badge p { font-size: 12px; line-height: 1.5; }
+  .be-badge p { font-size: 11px; line-height: 1.5; }
   .be-badge.found p { color: var(--accent2); }
   .be-badge.notfound p { color: var(--danger); }
-  .be-badge strong { font-weight: 700; }
 
-  .insight { background: linear-gradient(135deg, rgba(0,229,160,.05), rgba(123,97,255,.05)); border: 1px solid rgba(0,229,160,.15); border-radius: 9px; padding: 14px 18px; }
-  .insight p { font-size: 12px; line-height: 1.75; }
+  .insight { background: linear-gradient(135deg, rgba(30,155,240,.05), rgba(0,229,160,.04)); border: 1px solid rgba(30,155,240,.15); border-radius: 9px; padding: 13px 16px; }
+  .insight p { font-size: 11px; line-height: 1.8; color: var(--text); }
   .insight strong { color: var(--accent2); }
 
-  @media(max-width:900px){
+  @media(max-width:960px){
     main{grid-template-columns:1fr;}
     .inputs-panel{border-right:none;border-bottom:1px solid var(--border);}
-    header,.inputs-panel,.results-panel{padding:18px 18px;}
-    .roi-value{font-size:44px;}
+    header,.inputs-panel,.results-panel{padding:16px 16px;}
+    .win-hero-value{font-size:40px;}
     .funnel-strip{grid-template-columns:repeat(2,1fr);}
     .phase-grid{grid-template-columns:1fr 1fr;}
+    .win-hero-grid{grid-template-columns:1fr;}gap:10px;}
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">veta<span>.</span></div>
-  <div class="badge">ROI Performance · Preventa</div>
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Veta">
+  </div>
+  <div class="badge">Calculadora ROI · Soft Factory</div>
 </header>
 
 <main>
@@ -132,21 +157,38 @@
   <div class="inputs-panel">
     <div class="panel-title">Variables del cliente</div>
 
-    <div class="section-label">Inversión mensual</div>
+    <div class="section-label">Inversión</div>
+
     <div class="field">
-      <label>Budget en Meta / Google</label>
+      <label>Budget mensual Meta / Google</label>
       <div class="field-row"><span class="fp">USD / mes</span><input type="number" id="adBudget" value="800" min="100" step="50"></div>
     </div>
     <div class="field">
-      <label>Fee de agencia (Veta)</label>
-      <div class="field-row"><span class="fp">ARS / mes</span><input type="number" id="feeAgencia" value="1800000" min="0" step="50000"></div>
+      <label>Costo por reunión agendada (CPA)</label>
+      <div class="field-row"><span class="fp">USD</span><input type="number" id="cpaInput" value="50" min="10" step="5"></div>
+      <div class="slider-wrap">
+        <input type="range" id="cpaSlider" min="10" max="200" value="50">
+        <div class="slider-labels"><span>$10</span><span>$100</span><span>$200</span></div>
+      </div>
     </div>
     <div class="field">
       <label>Tipo de cambio</label>
-      <div class="field-row"><span class="fp">1 USD =</span><input type="number" id="fxRate" value="1300" min="100" step="50"><span class="fp" style="border-left:1px solid var(--border);border-right:none;">ARS</span></div>
+      <div class="field-row"><span class="fp">1 USD =</span><input type="number" id="fxRate" value="1400" min="100" step="50"><span class="fp fp-right">ARS</span></div>
+    </div>
+
+    <div class="section-label">Fee de agencia</div>
+
+    <div class="field">
+      <label>Set up (pago único)</label>
+      <div class="field-row"><span class="fp">ARS</span><input type="number" id="feeSetup" value="0" min="0" step="100000"></div>
+    </div>
+    <div class="field">
+      <label>Fee mensual (gestión + mantenimiento)</label>
+      <div class="field-row"><span class="fp">ARS / mes</span><input type="number" id="feeAgencia" value="1800000" min="0" step="50000"></div>
     </div>
 
     <div class="section-label">Negocio del cliente</div>
+
     <div class="field">
       <label>Ingreso mensual por cliente activo</label>
       <div class="field-row"><span class="fp">ARS $ / mes</span><input type="number" id="monthlyRevenue" value="80000" min="0" step="5000"></div>
@@ -160,7 +202,7 @@
       </div>
     </div>
     <div class="field">
-      <label>Duración promedio del cliente (meses)</label>
+      <label>Duración promedio del cliente</label>
       <div class="field-row"><span class="fp">meses</span><input type="number" id="clientDuration" value="12" min="1" max="60"></div>
       <div class="slider-wrap">
         <input type="range" id="durationSlider" min="1" max="60" value="12">
@@ -169,84 +211,79 @@
     </div>
 
     <div class="section-label">Fases del embudo</div>
-
-    <!-- Phase cards -->
-    <div class="phase-grid" style="margin-bottom:12px;">
+    <div class="phase-grid">
       <div class="phase-card warn">
         <div class="ph-label">Mes 1</div>
         <div class="ph-val">Arranque</div>
-        <div class="ph-sub">50% cap · CPA $70 · cierre 20%</div>
+        <div class="ph-sub">50% cap<br>CPA $70 · cierre 20%</div>
       </div>
       <div class="phase-card mid">
         <div class="ph-label">Mes 2</div>
         <div class="ph-val">Aprendizaje</div>
-        <div class="ph-sub">100% cap · CPA $70 · cierre 20%</div>
+        <div class="ph-sub">100% cap<br>CPA $70 · cierre 20%</div>
       </div>
       <div class="phase-card ok">
         <div class="ph-label">Mes 3+</div>
         <div class="ph-val">Régimen</div>
-        <div class="ph-sub">100% cap · CPA $50 · cierre 25%</div>
+        <div class="ph-sub">100% cap<br>CPA variable · 25%</div>
       </div>
     </div>
 
     <div class="fixed-block">
-      <div class="fixed-block-title">Benchmarks de industria</div>
-      <div class="fixed-row"><span>CPA reunión · Mes 1 y 2</span><div style="display:flex;align-items:center;gap:6px;"><span class="phase-tag warn">Pesimista</span><span class="fr-val">USD $70</span></div></div>
-      <div class="fixed-row"><span>CPA reunión · Mes 3+</span><div style="display:flex;align-items:center;gap:6px;"><span class="phase-tag ok">Régimen</span><span class="fr-val">USD $50</span></div></div>
+      <div class="fixed-block-title">Benchmarks fijos de industria</div>
       <div class="fixed-row"><span>Tasa de asistencia</span><span class="fr-val">70%</span></div>
-      <div class="fixed-row"><span>Tasa de cierre · Mes 1 y 2</span><div style="display:flex;align-items:center;gap:6px;"><span class="phase-tag warn">Pesimista</span><span class="fr-val">20%</span></div></div>
-      <div class="fixed-row"><span>Tasa de cierre · Mes 3+</span><div style="display:flex;align-items:center;gap:6px;"><span class="phase-tag ok">Régimen</span><span class="fr-val">25%</span></div></div>
-      <div class="fixed-row"><span>Capacidad · Mes 1</span><span class="fr-val">50%</span></div>
+      <div class="fixed-row"><span>CPA mes 1 y 2</span><div style="display:flex;gap:6px;align-items:center;"><span class="phase-tag warn">Pesimista</span><span class="fr-val">USD $70</span></div></div>
+      <div class="fixed-row"><span>CPA mes 3+</span><div style="display:flex;gap:6px;align-items:center;"><span class="phase-tag ok">Editable arriba</span></div></div>
+      <div class="fixed-row"><span>Cierre mes 1 y 2</span><div style="display:flex;gap:6px;align-items:center;"><span class="phase-tag warn">Pesimista</span><span class="fr-val">20%</span></div></div>
+      <div class="fixed-row"><span>Cierre mes 3+</span><span class="fr-val">25%</span></div>
     </div>
   </div>
 
   <!-- RESULTS -->
   <div class="results-panel">
 
-    <!-- Funnel régimen -->
+    <!-- WIN HERO — ganancia a 12 meses prominent -->
+    <div class="win-hero">
+      <div class="win-hero-eyebrow">Resultado proyectado</div>
+      <div class="win-hero-label">Ganancia neta acumulada a 12 meses</div>
+      <div class="win-hero-value" id="heroGanancia">…</div>
+      <div class="win-hero-sub">ingresos totales − inversión total (fee + pauta + setup)</div>
+      <div class="payback-row">
+        <div class="pill" id="paybackPill">…</div>
+        <div class="roi-badge" id="roiBadge">…</div>
+      </div>
+      <div class="win-hero-grid">
+        <div class="win-mini">
+          <div class="win-mini-val" id="miniClientes">—</div>
+          <div class="win-mini-label">clientes activos · mes 6</div>
+        </div>
+        <div class="win-mini">
+          <div class="win-mini-val" id="miniMargen">—</div>
+          <div class="win-mini-label">margen mensual · mes 6</div>
+        </div>
+        <div class="win-mini">
+          <div class="win-mini-val" id="miniCosto">—</div>
+          <div class="win-mini-label">costo total / mes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Funnel -->
     <div class="funnel-strip">
-      <div class="fs"><div class="fv" id="fReuniones">—</div><div class="fl">Reuniones / mes</div><div class="fsub">régimen (mes 3+)</div></div>
+      <div class="fs"><div class="fv" id="fReuniones">—</div><div class="fl">Reuniones / mes</div><div class="fsub">régimen mes 3+</div></div>
       <div class="fs"><div class="fv" id="fAsistidas">—</div><div class="fl">Asistidas</div><div class="fsub">× 70%</div></div>
       <div class="fs"><div class="fv" id="fCerradas">—</div><div class="fl">Clientes nuevos</div><div class="fsub">× 25%</div></div>
       <div class="fs"><div class="fv" id="fMargenNuevo">—</div><div class="fl">Margen incremental</div><div class="fsub">solo nuevos ese mes</div></div>
     </div>
 
-    <!-- ROI hero -->
-    <div class="roi-hero">
-      <div class="roi-eyebrow">ROI acumulado al mes 3</div>
-      <div class="roi-value pos" id="roiPct">…</div>
-      <div class="roi-unit">sobre inversión total acumulada (fee + pauta)</div>
-      <div class="pill" id="paybackPill">…</div>
-    </div>
-
-    <!-- Metrics -->
-    <div class="metrics-grid">
-      <div class="mc">
-        <div class="ml">Clientes activos al mes 6</div>
-        <div class="mv" id="mClientes6">—</div>
-        <div class="ms">base acumulada</div>
-      </div>
-      <div class="mc">
-        <div class="ml">Margen mensual al mes 6</div>
-        <div class="mv" id="mMargen6">—</div>
-        <div class="ms">sobre toda la base activa</div>
-      </div>
-      <div class="mc">
-        <div class="ml">Costo total mensual</div>
-        <div class="mv" id="mCosto">—</div>
-        <div class="ms">fee + pauta en ARS</div>
-      </div>
-      <div class="mc">
-        <div class="ml">Ganancia neta acum. · 12m</div>
-        <div class="mv" id="mGanancia12">—</div>
-        <div class="ms">ingresos − inversión total</div>
-      </div>
-    </div>
-
     <!-- Chart -->
     <div class="chart-section">
-      <div class="chart-title">Margen acumulado vs. Inversión acumulada · 12 meses</div>
-      <div class="chart-subtitle">La zona sombreada roja indica pérdida acumulada; verde indica ganancia neta.</div>
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Margen acumulado vs. Inversión acumulada · 12 meses</div>
+          <div class="chart-sub">Zona roja = pérdida · Zona verde = ganancia neta</div>
+        </div>
+      </div>
       <canvas id="chart"></canvas>
       <div class="be-badge" id="beBadge">
         <div class="be-dot"></div>
@@ -264,40 +301,37 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-  // Benchmarks fijos por fase
-  const CPA_EARLY  = 70;   // Mes 1 y 2
-  const CPA_NORMAL = 50;   // Mes 3+
-  const ATTEND     = 0.70;
-  const CLOSE_EARLY  = 0.20; // Mes 1 y 2
-  const CLOSE_NORMAL = 0.25; // Mes 3+
+  const CPA_EARLY    = 70;
+  const ATTEND       = 0.70;
+  const CLOSE_EARLY  = 0.20;
+  const CLOSE_NORMAL = 0.25;
   const M1_FACTOR    = 0.50;
 
   // Sliders
-  const marginInput  = document.getElementById('margin');
-  const marginSlider = document.getElementById('marginSlider');
-  const durInput     = document.getElementById('clientDuration');
-  const durSlider    = document.getElementById('durationSlider');
-  marginInput.addEventListener('input',  () => { marginSlider.value = marginInput.value; calc(); });
-  marginSlider.addEventListener('input', () => { marginInput.value  = marginSlider.value; calc(); });
-  durInput.addEventListener('input',     () => { durSlider.value = durInput.value; calc(); });
-  durSlider.addEventListener('input',    () => { durInput.value  = durSlider.value; calc(); });
-  ['adBudget','feeAgencia','fxRate','monthlyRevenue','margin','clientDuration'].forEach(id =>
-    document.getElementById(id).addEventListener('input', calc)
-  );
+  const syncSlider = (inputId, sliderId) => {
+    const inp = document.getElementById(inputId);
+    const sl  = document.getElementById(sliderId);
+    inp.addEventListener('input', () => { sl.value = inp.value; calc(); });
+    sl.addEventListener('input',  () => { inp.value = sl.value; calc(); });
+  };
+  syncSlider('margin', 'marginSlider');
+  syncSlider('clientDuration', 'durationSlider');
+  syncSlider('cpaInput', 'cpaSlider');
 
-  function fmt(n) {
+  ['adBudget','cpaInput','fxRate','feeSetup','feeAgencia','monthlyRevenue','margin','clientDuration']
+    .forEach(id => document.getElementById(id).addEventListener('input', calc));
+
+  function fmt(n, forceSign = false) {
+    const sign = forceSign && n > 0 ? '+' : '';
     const a = Math.abs(n);
-    if (a >= 1_000_000) return (n/1_000_000).toFixed(1) + 'M';
-    if (a >= 1_000)     return (n/1_000).toFixed(0) + 'K';
-    return Math.round(n).toLocaleString('es-AR');
+    const neg = n < 0 ? '-' : '';
+    if (a >= 1_000_000) return neg + sign + (a/1_000_000).toFixed(1) + 'M';
+    if (a >= 1_000)     return neg + sign + (a/1_000).toFixed(0) + 'K';
+    return (forceSign && n > 0 ? '+' : '') + Math.round(n).toLocaleString('es-AR');
   }
 
-  // Chart setup
+  // Chart
   const ctx = document.getElementById('chart').getContext('2d');
-
-  // Gradient helpers - created after first render
-  let gradGreen, gradRed;
-
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -305,44 +339,22 @@
       datasets: [
         {
           label: 'Margen acumulado',
-          data: [],
-          borderColor: '#00E5A0',
-          backgroundColor: 'rgba(0,229,160,0.10)',
-          borderWidth: 2.5,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 5,
-          pointBackgroundColor: '#00E5A0',
-          pointBorderColor: '#0A0A0F',
-          pointBorderWidth: 2,
-          order: 1
+          data: [], borderColor: '#00E5A0', backgroundColor: 'rgba(0,229,160,0.08)',
+          borderWidth: 2.5, fill: true, tension: 0.4,
+          pointRadius: 4, pointBackgroundColor: '#00E5A0', pointBorderColor: '#0A0A0F', pointBorderWidth: 2,
         },
         {
           label: 'Inversión acumulada',
-          data: [],
-          borderColor: '#7B61FF',
-          backgroundColor: 'rgba(123,97,255,0.06)',
-          borderWidth: 2,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 5,
-          pointBackgroundColor: '#7B61FF',
-          pointBorderColor: '#0A0A0F',
-          pointBorderWidth: 2,
+          data: [], borderColor: '#1E9BF0', backgroundColor: 'rgba(30,155,240,0.05)',
+          borderWidth: 2, fill: false, tension: 0.4,
+          pointRadius: 4, pointBackgroundColor: '#1E9BF0', pointBorderColor: '#0A0A0F', pointBorderWidth: 2,
           borderDash: [6,3],
-          order: 2
         },
-        // Breakeven point - scatter
         {
           label: 'Punto de equilibrio',
-          data: [],
-          type: 'scatter',
-          backgroundColor: '#FFB547',
-          borderColor: '#FFB547',
-          pointRadius: 10,
-          pointHoverRadius: 13,
-          pointStyle: 'star',
-          order: 0
+          data: [], type: 'scatter',
+          backgroundColor: '#FFB547', borderColor: '#FFB547',
+          pointRadius: 9, pointHoverRadius: 12, pointStyle: 'star',
         }
       ]
     },
@@ -352,27 +364,19 @@
       plugins: {
         legend: {
           labels: {
-            color: '#7A798A', font: { family:'Space Grotesk', size:11 },
-            boxWidth:18, padding:14,
-            filter: item => item.text !== 'Punto de equilibrio' // hide from legend, shown via badge
+            color: '#7A798A', font: { family:'Inter', size:11 }, boxWidth:16, padding:14,
+            filter: item => item.text !== 'Punto de equilibrio'
           }
         },
         tooltip: {
           backgroundColor: '#1C1C27', borderColor: '#2A2A3A', borderWidth: 1,
           titleColor: '#F0EFF8', bodyColor: '#7A798A',
-          callbacks: {
-            label: c => {
-              if (c.dataset.label === 'Punto de equilibrio') return ` ⭐ Punto de equilibrio`;
-              return ` ${c.dataset.label}: $${fmt(c.parsed.y)}`;
-            }
-          }
-        },
-        // Vertical line plugin for breakeven
-        annotation: false
+          callbacks: { label: c => c.dataset.label === 'Punto de equilibrio' ? ' ⭐ Punto de equilibrio' : ` ${c.dataset.label}: $${fmt(c.parsed.y)}` }
+        }
       },
       scales: {
-        x: { ticks: { color:'#7A798A', font:{family:'Space Grotesk',size:10} }, grid: { color:'rgba(255,255,255,0.04)' } },
-        y: { ticks: { color:'#7A798A', font:{family:'Space Grotesk',size:10}, callback: v => '$'+fmt(v) }, grid: { color:'rgba(255,255,255,0.04)' } }
+        x: { ticks: { color:'#7A798A', font:{family:'Inter',size:10} }, grid: { color:'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color:'#7A798A', font:{family:'Inter',size:10}, callback: v => '$'+fmt(v) }, grid: { color:'rgba(255,255,255,0.04)' } }
       }
     },
     plugins: [{
@@ -382,10 +386,9 @@
         if (!chartArea) return;
         const gains = chart.data.datasets[0].data;
         const costs = chart.data.datasets[1].data;
-        const lbls = chart.data.labels;
+        const lbls  = chart.data.labels;
         if (!gains.length || !costs.length || !lbls.length) return;
 
-        // Find breakeven index
         let beIdx = -1;
         for (let i = 0; i < gains.length; i++) {
           if (gains[i] >= costs[i]) { beIdx = i; break; }
@@ -394,36 +397,30 @@
         const { left, right, top, bottom } = chartArea;
 
         if (beIdx === -1) {
-          // All red - no breakeven
           ctx.save();
           ctx.fillStyle = 'rgba(255,94,94,0.07)';
           ctx.fillRect(left, top, right - left, bottom - top);
           ctx.restore();
         } else {
-          // Estimate x pixel of breakeven (interpolate between beIdx-1 and beIdx)
           let beX;
+          const x1px = scales.x.getPixelForValue(lbls[beIdx]);
           if (beIdx === 0) {
-            beX = scales.x.getPixelForValue(lbls[0]);
+            beX = x1px;
           } else {
-            const x0 = scales.x.getPixelForValue(lbls[beIdx - 1]);
-            const x1 = scales.x.getPixelForValue(lbls[beIdx]);
+            const x0px = scales.x.getPixelForValue(lbls[beIdx - 1]);
             const g0 = gains[beIdx-1], g1 = gains[beIdx];
             const c0 = costs[beIdx-1], c1 = costs[beIdx];
-            const denom = (g1-g0)-(c1-c0);
-            const t = denom !== 0 ? (c0-g0)/denom : 0.5;
-            beX = x0 + Math.min(Math.max(t,0),1) * (x1-x0);
+            const denom = (g1 - g0) - (c1 - c0);
+            const t = denom !== 0 ? (c0 - g0) / denom : 0.5;
+            beX = x0px + Math.min(Math.max(t, 0), 1) * (x1px - x0px);
           }
 
-          // Red zone (left of breakeven)
           ctx.save();
-          ctx.fillStyle = 'rgba(255,94,94,0.08)';
+          ctx.fillStyle = 'rgba(255,94,94,0.07)';
           ctx.fillRect(left, top, beX - left, bottom - top);
-
-          // Green zone (right of breakeven)
           ctx.fillStyle = 'rgba(0,229,160,0.07)';
           ctx.fillRect(beX, top, right - beX, bottom - top);
 
-          // Vertical dashed line at breakeven
           ctx.strokeStyle = '#FFB547';
           ctx.lineWidth = 1.5;
           ctx.setLineDash([4, 4]);
@@ -433,11 +430,10 @@
           ctx.stroke();
           ctx.setLineDash([]);
 
-          // Label on the line
           ctx.fillStyle = '#FFB547';
-          ctx.font = '600 10px Space Grotesk, sans-serif';
+          ctx.font = '600 9px Inter, sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('PUNTO DE EQUILIBRIO', beX, top + 12);
+          ctx.fillText('EQUILIBRIO', beX, top + 11);
           ctx.restore();
         }
       }
@@ -446,38 +442,31 @@
 
   function calc() {
     const adUSD      = parseFloat(document.getElementById('adBudget').value)      || 0;
-    const fee        = parseFloat(document.getElementById('feeAgencia').value)    || 0;
-    const fx         = parseFloat(document.getElementById('fxRate').value)        || 1300;
-    const monthlyRev = parseFloat(document.getElementById('monthlyRevenue').value)|| 0;
-    const marginPct  = parseFloat(document.getElementById('margin').value)        || 0;
-    const duration   = parseFloat(document.getElementById('clientDuration').value)|| 12;
+    const cpaRegimen = parseFloat(document.getElementById('cpaInput').value)       || 50;
+    const fx         = parseFloat(document.getElementById('fxRate').value)         || 1400;
+    const feeSetup   = parseFloat(document.getElementById('feeSetup').value)       || 0;
+    const fee        = parseFloat(document.getElementById('feeAgencia').value)     || 0;
+    const monthlyRev = parseFloat(document.getElementById('monthlyRevenue').value) || 0;
+    const marginPct  = parseFloat(document.getElementById('margin').value)         || 0;
+    const duration   = parseFloat(document.getElementById('clientDuration').value) || 12;
 
-    const adARS    = adUSD * fx;
-    const totalCost = fee + adARS;
+    const adARS       = adUSD * fx;
+    const totalCost   = fee + adARS;   // costo mensual recurrente
     const marginPerClient = monthlyRev * (marginPct / 100);
 
-    // Clientes nuevos por mes según fase
-    // Mes 1: 50% cap, CPA $70, cierre 20%
-    const newM1 = (adUSD / CPA_EARLY)  * ATTEND * CLOSE_EARLY  * M1_FACTOR;
-    // Mes 2: 100% cap, CPA $70, cierre 20%
-    const newM2 = (adUSD / CPA_EARLY)  * ATTEND * CLOSE_EARLY;
-    // Mes 3+: 100% cap, CPA $50, cierre 25%
-    const newMN = (adUSD / CPA_NORMAL) * ATTEND * CLOSE_NORMAL;
+    // Clientes nuevos por fase
+    const newM1 = (adUSD / CPA_EARLY)    * ATTEND * CLOSE_EARLY  * M1_FACTOR;
+    const newM2 = (adUSD / CPA_EARLY)    * ATTEND * CLOSE_EARLY;
+    const newMN = (adUSD / cpaRegimen)   * ATTEND * CLOSE_NORMAL;
 
-    // Funnel (régimen)
-    document.getElementById('fReuniones').textContent = (adUSD / CPA_NORMAL).toFixed(1);
-    document.getElementById('fAsistidas').textContent = ((adUSD / CPA_NORMAL) * ATTEND).toFixed(1);
-    document.getElementById('fCerrados' ) && null;
-    document.getElementById('fCerradas').textContent  = newMN.toFixed(2);
+    // Funnel régimen
+    document.getElementById('fReuniones').textContent  = (adUSD / cpaRegimen).toFixed(1);
+    document.getElementById('fAsistidas').textContent  = ((adUSD / cpaRegimen) * ATTEND).toFixed(1);
+    document.getElementById('fCerradas').textContent   = newMN.toFixed(2);
     document.getElementById('fMargenNuevo').textContent = '$' + fmt(newMN * marginPerClient);
 
-    // Build 12-month cumulative model
+    // Cohorts
     const MONTHS = 12;
-    const labels = [], gains = [], costs = [];
-    let cumGain = 0, cumCost = 0, paybackMonth = null;
-    let clientes6 = 0, margen6 = 0;
-
-    // Cohort: how many new clients join each month
     const cohort = [];
     for (let m = 1; m <= MONTHS; m++) {
       if (m === 1) cohort[m] = newM1;
@@ -485,12 +474,13 @@
       else cohort[m] = newMN;
     }
 
-    const beScatterData = [];
+    const labels = [], gains = [], costs = [];
+    let cumGain = 0, cumCost = feeSetup; // setup es costo mes 0
+    let paybackMonth = null, clientes6 = 0, margen6 = 0;
 
     for (let m = 1; m <= MONTHS; m++) {
       labels.push(`Mes ${m}`);
 
-      // Active clients = cohorts that started <= m AND haven't churned yet
       let active = 0;
       for (let k = 1; k <= m; k++) {
         if (k + duration - 1 >= m) active += cohort[k];
@@ -503,65 +493,60 @@
       gains.push(Math.round(cumGain));
       costs.push(Math.round(cumCost));
 
-      if (!paybackMonth && cumGain >= cumCost) {
-        paybackMonth = m;
-        beScatterData.push({ x: m - 1, y: Math.round(cumGain) }); // x is index
-      }
-
+      if (!paybackMonth && cumGain >= cumCost) paybackMonth = m;
       if (m === 6) { clientes6 = active; margen6 = monthMargin; }
     }
 
     const ganancia12 = cumGain - cumCost;
     const roi3 = costs[2] > 0 ? ((gains[2] - costs[2]) / costs[2]) * 100 : 0;
 
-    // ROI hero
-    const roiEl = document.getElementById('roiPct');
-    roiEl.textContent = (roi3 >= 0 ? '+' : '') + Math.round(roi3) + '%';
-    roiEl.className = 'roi-value ' + (roi3 > 10 ? 'pos' : roi3 >= 0 ? 'warn' : 'neg');
+    // WIN HERO
+    const heroEl = document.getElementById('heroGanancia');
+    heroEl.textContent = '$' + fmt(Math.abs(ganancia12));
+    heroEl.className = 'win-hero-value ' + (ganancia12 > 0 ? '' : ganancia12 > -totalCost ? 'warn' : 'neg');
 
     const pill = document.getElementById('paybackPill');
     if (paybackMonth) {
-      pill.textContent = `⚡ Punto de equilibrio en el mes ${paybackMonth}`;
+      pill.textContent = `⚡ Recupero en el mes ${paybackMonth}`;
       pill.className   = 'pill' + (paybackMonth <= 4 ? '' : paybackMonth <= 7 ? ' warn' : ' danger');
     } else {
-      pill.textContent = '⚠ No alcanza equilibrio en 12 meses';
+      pill.textContent = '⚠ Sin recupero en 12 meses';
       pill.className   = 'pill danger';
     }
 
-    // Metrics
-    document.getElementById('mClientes6').textContent  = clientes6.toFixed(1);
-    document.getElementById('mMargen6').textContent    = '$' + fmt(margen6);
-    document.getElementById('mCosto').textContent      = '$' + fmt(totalCost);
-    document.getElementById('mGanancia12').textContent = (ganancia12 >= 0 ? '+' : '') + '$' + fmt(Math.abs(ganancia12));
+    document.getElementById('roiBadge').textContent = `ROI mes 3: ${roi3 >= 0 ? '+' : ''}${Math.round(roi3)}%`;
+
+    document.getElementById('miniClientes').textContent = clientes6.toFixed(1);
+    document.getElementById('miniMargen').textContent   = '$' + fmt(margen6);
+    document.getElementById('miniCosto').textContent    = '$' + fmt(totalCost);
 
     // Chart
     chart.data.labels = labels;
     chart.data.datasets[0].data = gains;
     chart.data.datasets[1].data = costs;
-    // Scatter breakeven: use the label string at paybackMonth index
     chart.data.datasets[2].data = paybackMonth
       ? [{ x: labels[paybackMonth - 1], y: gains[paybackMonth - 1] }]
       : [];
     chart.update('active');
 
     // Breakeven badge
-    const badge  = document.getElementById('beBadge');
-    const beText = document.getElementById('beText');
+    const badge = document.getElementById('beBadge');
     if (paybackMonth) {
       badge.className = 'be-badge found';
-      beText.innerHTML = `<strong>Punto de equilibrio alcanzado en el mes ${paybackMonth}.</strong> A partir de ahí, cada mes suma ganancia neta.`;
+      document.getElementById('beText').innerHTML = `<strong>Punto de equilibrio en el mes ${paybackMonth}.</strong> A partir de ahí, cada mes es ganancia neta.`;
     } else {
       badge.className = 'be-badge notfound';
-      beText.innerHTML = `<strong>Sin punto de equilibrio en 12 meses.</strong> Revisá el ingreso mensual por cliente, el margen o el fee de agencia.`;
+      document.getElementById('beText').innerHTML = `<strong>Sin punto de equilibrio en 12 meses.</strong> Ajustá el ingreso, margen o fee.`;
     }
 
     // Insight
     document.getElementById('insightText').innerHTML =
-      `El embudo arranca pesimista: mes 1 con <strong>${newM1.toFixed(2)} clientes</strong> (50% cap, CPA $70, cierre 20%), mes 2 con <strong>${newM2.toFixed(2)} clientes</strong>, y desde el mes 3 en régimen con <strong>${newMN.toFixed(2)} clientes/mes</strong>. ` +
-      `Como cada cliente permanece activo <strong>${duration} meses</strong>, la base crece mes a mes: al mes 6 hay <strong>${clientes6.toFixed(1)} clientes activos</strong> generando <strong>$${fmt(margen6)}/mes de margen</strong>. ` +
+      `Arrancamos pesimista: mes 1 con <strong>${newM1.toFixed(2)} clientes</strong> (50% cap, CPA $70, cierre 20%), mes 2 con <strong>${newM2.toFixed(2)}</strong>, y desde el mes 3 en régimen con <strong>${newMN.toFixed(2)} clientes/mes</strong> (CPA $${cpaRegimen}, cierre 25%). ` +
+      `Con ${duration} meses de vida útil por cliente, al mes 6 hay <strong>${clientes6.toFixed(1)} clientes activos</strong> generando <strong>$${fmt(margen6)}/mes de margen</strong>. ` +
+      (feeSetup > 0 ? `El set up de <strong>$${fmt(feeSetup)}</strong> se suma como inversión inicial. ` : '') +
       (paybackMonth
-        ? `La inversión se recupera en el <strong>mes ${paybackMonth}</strong> y la ganancia neta a 12 meses es <strong>$${fmt(Math.abs(ganancia12))}</strong>.`
-        : `Con los datos actuales no hay payback en 12 meses. Ajustá el ingreso por cliente, el margen o el fee.`);
+        ? `La inversión total se recupera en el <strong>mes ${paybackMonth}</strong> y la <strong>ganancia neta a 12 meses es $${fmt(Math.abs(ganancia12))}</strong>.`
+        : `Con los datos actuales el recupero supera los 12 meses.`);
   }
 
   calc();
