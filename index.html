@@ -464,7 +464,7 @@
     document.getElementById('fReuniones').textContent  = (adUSD / cpaRegimen).toFixed(1);
     document.getElementById('fAsistidas').textContent  = ((adUSD / cpaRegimen) * ATTEND).toFixed(1);
     document.getElementById('fCerradas').textContent   = newMN.toFixed(2);
-    document.getElementById('fMargenNuevo').textContent = '$' + fmt(newMN * marginPerClient);
+    document.getElementById('fMargenNuevo').textContent = '$' + fmt(newMN * marginPerClient + newMN * feeSetup);
 
     // Cohorts
     const MONTHS = 12;
@@ -476,7 +476,7 @@
     }
 
     const labels = [], gains = [], costs = [];
-    let cumGain = feeSetup; // setup del cliente suma al ingreso mes 1
+    let cumGain = 0;
     let cumCost = 0;
     let paybackMonth = null, clientes6 = 0, margen6 = 0;
 
@@ -488,7 +488,10 @@
         if (k + duration - 1 >= m) active += cohort[k];
       }
 
-      const monthMargin = active * marginPerClient;
+      // Ingresos: margen recurrente de todos los activos + setup de los nuevos ese mes
+      const newThisMonth = cohort[m];
+      const setupIncome  = newThisMonth * feeSetup;
+      const monthMargin  = active * marginPerClient + setupIncome;
       cumGain += monthMargin;
       cumCost += totalCost;
 
@@ -545,7 +548,7 @@
     document.getElementById('insightText').innerHTML =
       `Arrancamos pesimista: mes 1 con <strong>${newM1.toFixed(2)} clientes</strong> (50% cap, CPA $70, cierre 20%), mes 2 con <strong>${newM2.toFixed(2)}</strong>, y desde el mes 3 en régimen con <strong>${newMN.toFixed(2)} clientes/mes</strong> (CPA $${cpaRegimen}, cierre 25%). ` +
       `Con ${duration} meses de vida útil por cliente, al mes 6 hay <strong>${clientes6.toFixed(1)} clientes activos</strong> generando <strong>$${fmt(margen6)}/mes de margen</strong>. ` +
-      (feeSetup > 0 ? `El cliente paga un set up inicial de <strong>$${fmt(feeSetup)}</strong> que se suma al ingreso del mes 1. ` : '') +
+      (feeSetup > 0 ? `El set up de <strong>$${fmt(feeSetup)}</strong> por cliente nuevo suma <strong>$${fmt(newM1*feeSetup + newM2*feeSetup)}</strong> en los primeros 2 meses. ` : '') +
       (paybackMonth
         ? `La inversión total se recupera en el <strong>mes ${paybackMonth}</strong> y la <strong>ganancia neta a 12 meses es $${fmt(Math.abs(ganancia12))}</strong>.`
         : `Con los datos actuales el recupero supera los 12 meses.`);
